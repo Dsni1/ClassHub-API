@@ -30,7 +30,7 @@ namespace ClassHub.Data
                 .HasKey(u => u.Id);
 
             modelBuilder.Entity<User>()
-                .Property(u => u.User_Name)
+                .Property(u => u.User_name)
                 .HasColumnName("user_name")
                 .IsRequired();
 

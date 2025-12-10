@@ -3,7 +3,7 @@ namespace ClassHub.Models
     public class User
     {
         public int Id { get; set; }
-        public string? User_Name { get; set; }
+        public string? User_name { get; set; }
         public string? Password { get; set; }
 
         // Many-to-many with Roles, Organizations

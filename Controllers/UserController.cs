@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ClassHub.Data;
 using ClassHub.Models;
 using ClassHub.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClassHub.Controllers
 {
@@ -11,10 +12,12 @@ namespace ClassHub.Controllers
     public class UserController : ControllerBase
     {
         private readonly ExternalDbContext _context;
+        private readonly PasswordHasher<User> _passwordHash;
 
         public UserController(ExternalDbContext context)
         {
             _context = context;
+            _passwordHash = new PasswordHasher<User>();
         }
 
         // GET: api/users
@@ -25,7 +28,7 @@ namespace ClassHub.Controllers
                 .Select(u => new
                 {
                     u.Id,
-                    u.User_Name
+                    u.User_name
                 })
                 .ToList();
 
@@ -41,7 +44,7 @@ namespace ClassHub.Controllers
                 .Select(u => new
                 {
                     u.Id,
-                    u.User_Name
+                    u.User_name
                 })
                 .FirstOrDefault();
 
@@ -55,22 +58,23 @@ namespace ClassHub.Controllers
         [HttpPost]
         public IActionResult CreateUser([FromBody] CreateUserDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.UserName) ||
+            if (string.IsNullOrWhiteSpace(dto.User_name) ||
                 string.IsNullOrWhiteSpace(dto.Password))
             {
                 return BadRequest("Username and password are required");
             }
 
-            if (_context.Users.Any(u => u.User_Name == dto.UserName))
+            if (_context.Users.Any(u => u.User_name == dto.User_name))
             {
                 return BadRequest("Username already exists");
             }
 
             var user = new User
             {
-                User_Name = dto.UserName,
-                Password = dto.Password // ⚠ később HASH!
+                User_name = dto.User_name,
             };
+
+            user.Password = _passwordHash.HashPassword(user, dto.Password);
 
             _context.Users.Add(user);
             _context.SaveChanges();
@@ -78,7 +82,7 @@ namespace ClassHub.Controllers
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, new
             {
                 user.Id,
-                user.User_Name
+                user.User_name
             });
         }
 
