@@ -1,5 +1,5 @@
 ### POST createUser: OK
-POST http://localhost:5000/api/users
+POST http://localhost:8080/api/users
 content-type: application/json
 
 {
@@ -25,3 +25,7 @@ content-type: application/json
     "User_name": "admin",
     "Password": "admin"
 }
+
+### GET users: OK
+GET http://127.0.0.1:8080/api/users
+Authorization: application/json
