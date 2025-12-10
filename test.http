@@ -1,7 +1,27 @@
+### POST createUser: OK
 POST http://localhost:5000/api/users
 content-type: application/json
 
 {
     "UserName": "Teszt",
     "Password": "Teszt1"
+}
+
+### POST login: OK
+POST http://localhost:5000/api/auth/login
+content-type: application/json
+
+{
+    "User_name": "admin",
+    "Password": "admin123"
+}
+
+
+### POST login: Not OK
+POST http://localhost:5000/api/auth/login
+content-type: application/json
+
+{
+    "User_name": "admin",
+    "Password": "admin"
 }
