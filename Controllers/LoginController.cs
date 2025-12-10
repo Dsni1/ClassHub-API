@@ -28,7 +28,7 @@ namespace ClassHub.Controllers
                 return BadRequest(ModelState);
 
             var user = await _context.Users
-                .SingleOrDefaultAsync(u => u.User_name == request.User_name);
+                .SingleOrDefaultAsync(u => u.UserName == request.UserName);
 
 
             if (user == null)

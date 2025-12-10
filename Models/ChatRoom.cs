@@ -1,16 +1,23 @@
-namespace ClassHub.Models
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ClassHub.Models;
+
+[Table("ChatRooms")]
+public class ChatRoom
 {
-    public class ChatRoom
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Type { get; set; } // 'private' or 'group'
-        public DateTime Created_At { get; set; }
+    [Key]
+    public int Id { get; set; }
 
-        public int? GroupId { get; set; }
-        public Group? Group { get; set; }
+    [Column("name")]
+    public string? Name { get; set; }
 
-        public ICollection<ChatRoomUser>? ChatRoomUsers { get; set; }
-        public ICollection<Message>? Messages { get; set; }
-    }
+    [Column("type")]
+    public string Type { get; set; } = null!;
+
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
+
+    [Column("group_id")]
+    public int? GroupId { get; set; }
 }

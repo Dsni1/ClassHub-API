@@ -1,21 +1,25 @@
-namespace ClassHub.Models
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ClassHub.Models;
+
+namespace ClassHub.Models;
+
+[Table("Users")]
+public class User
 {
-    public class User
-    {
-        public int Id { get; set; }
-        public string? User_name { get; set; }
-        public string? Password { get; set; }
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        // Many-to-many with Roles, Organizations
-        public ICollection<UserRole>? UserRoles { get; set; }
+    [Required]
+    [Column("user_name")]
+    [MaxLength(255)]
+    public string UserName { get; set; } = null!;
 
-        // Group memberships
-        public ICollection<GroupUser>? GroupUsers { get; set; }
+    [Required]
+    [Column("password")]
+    [MaxLength(255)]
+    public string Password { get; set; } = null!;
 
-        // Chatroom memberships
-        public ICollection<ChatRoomUser>? ChatRoomUsers { get; set; }
-
-        // Messages sent by user
-        public ICollection<Message>? Messages { get; set; }
-    }
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

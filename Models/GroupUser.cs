@@ -1,11 +1,14 @@
-namespace ClassHub.Models
-{
-    public class GroupUser
-    {
-        public int GroupId { get; set; }
-        public int UserId { get; set; }
+using System.ComponentModel.DataAnnotations.Schema;
 
-        public Group? Group { get; set; }
-        public User? User { get; set; }
-    }
+namespace ClassHub.Models;
+
+
+[Table("GroupUsers")]
+public class GroupUser
+{
+    [Column("group_id")]
+    public int GroupId { get; set; }
+
+    [Column("user_id")]
+    public int UserId { get; set; }
 }

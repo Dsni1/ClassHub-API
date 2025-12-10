@@ -1,11 +1,13 @@
-namespace ClassHub.Models
-{
-    public class ChatRoomUser
-    {
-        public int ChatRoomId { get; set; }
-        public int UserId { get; set; }
+using System.ComponentModel.DataAnnotations.Schema;
 
-        public ChatRoom? ChatRoom { get; set; }
-        public User? User { get; set; }
-    }
+namespace ClassHub.Models;
+
+[Table("ChatRoomUsers")]
+public class ChatRoomUser
+{
+    [Column("chatroom_id")]
+    public int ChatRoomId { get; set; }
+
+    [Column("user_id")]
+    public int UserId { get; set; }
 }

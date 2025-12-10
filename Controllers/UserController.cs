@@ -28,7 +28,7 @@ namespace ClassHub.Controllers
                 .Select(u => new
                 {
                     u.Id,
-                    u.User_name
+                    u.UserName
                 })
                 .ToList();
 
@@ -44,7 +44,7 @@ namespace ClassHub.Controllers
                 .Select(u => new
                 {
                     u.Id,
-                    u.User_name
+                    u.UserName
                 })
                 .FirstOrDefault();
 
@@ -58,20 +58,20 @@ namespace ClassHub.Controllers
         [HttpPost]
         public IActionResult CreateUser([FromBody] CreateUserDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.User_name) ||
+            if (string.IsNullOrWhiteSpace(dto.UserName) ||
                 string.IsNullOrWhiteSpace(dto.Password))
             {
                 return BadRequest("Username and password are required");
             }
 
-            if (_context.Users.Any(u => u.User_name == dto.User_name))
+            if (_context.Users.Any(u => u.UserName == dto.UserName))
             {
                 return BadRequest("Username already exists");
             }
 
             var user = new User
             {
-                User_name = dto.User_name,
+                UserName = dto.UserName,
             };
 
             user.Password = _passwordHash.HashPassword(user, dto.Password);
@@ -82,7 +82,7 @@ namespace ClassHub.Controllers
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, new
             {
                 user.Id,
-                user.User_name
+                user.UserName
             });
         }
 

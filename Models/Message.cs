@@ -1,14 +1,29 @@
-namespace ClassHub.Models
-{
-    public class Message
-    {
-        public int Id { get; set; }
-        public int ChatRoomId { get; set; }
-        public int UserId { get; set; }
-        public string? Text { get; set; }
-        public DateTime Created_At { get; set; }
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ClassHub.Models;
 
-        public ChatRoom? ChatRoom { get; set; }
-        public User? User { get; set; }
-    }
+namespace ClassHub.Models;
+
+[Table("Messages")]
+public class Message
+{
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
+
+    [Column("chatroom_id")]
+    public int ChatRoomId { get; set; }
+
+    [Column("user_id")]
+    public int UserId { get; set; }
+
+    [Required]
+    [Column("text")]
+    [MaxLength(255)]
+    public string Text { get; set; } = null!;
+
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
 }
+
+

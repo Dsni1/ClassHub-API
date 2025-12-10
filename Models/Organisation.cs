@@ -1,11 +1,22 @@
-namespace ClassHub.Models
-{
-    public class Organisation
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ClassHub.Models;
 
-        public ICollection<UserRole>? UserRoles { get; set; }
-        public ICollection<Group>? Groups { get; set; }
-    }
+namespace ClassHub.Models;
+
+[Table("Organisations")]
+public class Organisation
+{
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
+
+    [Required]
+    [Column("name")]
+    [MaxLength(255)]
+    public string Name { get; set; } = null!;
+
+    public ICollection<Group> Groups { get; set; } = new List<Group>();
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }
+
