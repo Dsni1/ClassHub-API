@@ -4,6 +4,7 @@ using ClassHub.Data;
 using ClassHub.Models;
 using ClassHub.DTOs;
 using Microsoft.AspNetCore.Identity;
+using ClassHub.Services;
 
 namespace ClassHub.Controllers
 {
@@ -13,23 +14,23 @@ namespace ClassHub.Controllers
     {
         private readonly ExternalDbContext _context;
         private readonly PasswordHasher<User> _passwordHasher;
+        private readonly JwtService _jwtService;
 
-        public LoginController(ExternalDbContext context)
+        public LoginController(ExternalDbContext context, JwtService jwtService)
         {
             _context = context;
+            _jwtService = jwtService;
             _passwordHasher = new PasswordHasher<User>();
         }
 
-        // POST: api/auth/login
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
         {
-             if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var user = await _context.Users
                 .SingleOrDefaultAsync(u => u.UserName == request.UserName);
-
 
             if (user == null)
                 return Unauthorized("Invalid username or password");
@@ -43,11 +44,13 @@ namespace ClassHub.Controllers
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized("Invalid username or password");
 
-            // ✅ User authenticated
+            // 🔥 Token generálás
+            var token = _jwtService.GenerateToken(user);
+
             return Ok(new LoginResponseDto
             {
                 UserId = user.Id,
-                Token = "TEMP_TOKEN"
+                Token = token
             });
         }
     }
