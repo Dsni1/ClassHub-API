@@ -26,7 +26,7 @@ POST http://localhost:8080/api/auth/validate
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwidW5pcXVlX25hbWUiOiJkYW5pZWwiLCJ1c2VySWQiOiIyIiwiZXhwIjoxNzY1NDU0NzQ5LCJpc3MiOiJjbGFzc2h1Yi1hcGkiLCJhdWQiOiJjbGFzc2h1Yi1jbGllbnQifQ.XJYMsqLLbF2by2MR0QVr2HuiRQpMHkKiKOHXBUuwD8M"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwidW5pcXVlX25hbWUiOiJkYW5pZWwiLCJ1c2VySWQiOiIyIiwiZXhwIjoxNzY1NDU3MTI5LCJpc3MiOiJjbGFzc2h1Yi1hcGkiLCJhdWQiOiJjbGFzc2h1Yi1jbGllbnQifQ.5miPI41UaZj_6mQqb9kSKDVvItwHLzwF9l6s2SoX6E8"
 }
 
 
@@ -35,5 +35,5 @@ POST http://localhost:8080/api/auth/refresh
 Content-Type: application/json
 
 {
-    "refreshToken": "8gVjAtfidEaJO0yYQW0keBKkYNQfnBp3u5JFO4gd/5/hbjGPaewTNdR7RyLWgU1zBiq3tW/7B3ZCjDBKE3Zz9A=="
+    "refreshToken": "BhWnK4PyFznoEnfUL/pCAWIpnALXoyw7WUCMDKNFLYl6TAGQxYLSXU2Hx5Obwsf6AvcEFBm7xtTKKzaVnIDhsQ=="
 }

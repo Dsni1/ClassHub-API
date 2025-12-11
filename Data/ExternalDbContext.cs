@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ClassHub.Models;
+﻿using ClassHub.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClassHub.Data
 {
@@ -21,52 +21,75 @@ namespace ClassHub.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<Role>().ToTable("Roles");
-            modelBuilder.Entity<Organisation>().ToTable("Organisations");
-            modelBuilder.Entity<Group>().ToTable("Groups");
-            modelBuilder.Entity<ChatRoom>().ToTable("ChatRooms");
-            modelBuilder.Entity<Message>().ToTable("Messages");
-
-            // ===== USERROLE =====
+            // UserRole composite key
             modelBuilder.Entity<UserRole>()
-                .ToTable("UserRoles")
-                .HasKey(ur => new { ur.RoleId, ur.UserId, ur.OrganisationId });
+                .HasKey(ur => new { ur.UserId, ur.RoleId, ur.OrganisationId });
 
-            // ===== GROUPUSER =====
+            // GroupUser composite key
             modelBuilder.Entity<GroupUser>()
-                .ToTable("GroupUsers")
                 .HasKey(gu => new { gu.GroupId, gu.UserId });
 
-            // ===== CHATROOMUSER =====
+            // ChatRoomUser composite key
             modelBuilder.Entity<ChatRoomUser>()
-                .ToTable("ChatRoomUsers")
-                .HasKey(cu => new { cu.ChatRoomId, cu.UserId });
+                .HasKey(cru => new { cru.ChatRoomId, cru.UserId });
 
-            // ===== MESSAGE =====
-            modelBuilder.Entity<Message>()
-                .Property(m => m.CreatedAt)
-                .HasColumnName("created_at");
+            // kapcsolatok példák:
 
-            modelBuilder.Entity<ChatRoom>()
-                .Property(cr => cr.CreatedAt)
-                .HasColumnName("created_at");
-            
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Organisation)
+                .WithMany(o => o.UserRoles)
+                .HasForeignKey(ur => ur.OrganisationId);
+
+            modelBuilder.Entity<GroupUser>()
+                .HasOne(gu => gu.Group)
+                .WithMany(g => g.GroupUsers)
+                .HasForeignKey(gu => gu.GroupId);
+
+            modelBuilder.Entity<GroupUser>()
+                .HasOne(gu => gu.User)
+                .WithMany(u => u.GroupUsers)
+                .HasForeignKey(gu => gu.UserId);
+
+            modelBuilder.Entity<ChatRoomUser>()
+                .HasOne(cru => cru.ChatRoom)
+                .WithMany(cr => cr.ChatRoomUsers)
+                .HasForeignKey(cru => cru.ChatRoomId);
+
+            modelBuilder.Entity<ChatRoomUser>()
+                .HasOne(cru => cru.User)
+                .WithMany(u => u.ChatRoomUsers)
+                .HasForeignKey(cru => cru.UserId);
+
+            // RefreshToken – már DataAnnotation-nel is be van lőve, itt elég ennyi:
             modelBuilder.Entity<RefreshToken>()
                 .HasOne(rt => rt.User)
                 .WithMany(u => u.RefreshTokens)
-                .HasForeignKey(rt => rt.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(rt => rt.UserId);
 
-            modelBuilder.Entity<RefreshToken>()
-                .HasIndex(rt => rt.Token)
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.UserName)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
         }
 
+        
     }
 }
