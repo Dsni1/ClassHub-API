@@ -1,10 +1,10 @@
 ### POST createUser: OK
-POST http://10.42.0.211:8080/api/users
+POST http://localhost:8080/api/users
 content-type: application/json
 
 {
-    "UserName": "admin",
-    "Password": "admin"
+    "UserName": "teszt1",
+    "Password": "teszt1"
 }
 
 ### POST login: OK
@@ -32,10 +32,18 @@ Authorization: application/json
 
 
 ### POST login: OK
-POST http://localhost:5000/api/auth/login
+POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "userName": "admin",
-  "password": "admin123"
+  "userName": "teszt1",
+  "password": "teszt1"
+}
+
+### POST token login: OK
+POST http://localhost:8080/api/auth/validate
+Content-Type: application/json
+
+{
+    "Token": "eyJhGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwidW5pcXVlX25hbWUiOiJ0ZXN6dDEiLCJ1c2VySWQiOiI1IiwiZXhwIjoxNzY1NDQ4NTc3LCJpc3MiOiJDbGFzc0h1YiIsImF1ZCI6IkNsYXNzSHViVXNlcnMifQ.sXCXZ60Nkt7ks4gnbjKmPNojB5kI0iWeez2JpBobGYI"
 }

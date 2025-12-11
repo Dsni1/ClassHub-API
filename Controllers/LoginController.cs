@@ -5,6 +5,8 @@ using ClassHub.Models;
 using ClassHub.DTOs;
 using Microsoft.AspNetCore.Identity;
 using ClassHub.Services;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ClassHub.Controllers
 {
@@ -45,13 +47,63 @@ namespace ClassHub.Controllers
                 return Unauthorized("Invalid username or password");
 
             // 🔥 Token generálás
-            var token = _jwtService.GenerateToken(user);
+            var token = _jwtService.GenerateToken(user, request.RememberMe);
 
             return Ok(new LoginResponseDto
             {
                 UserId = user.Id,
                 Token = token
             });
+        }
+
+        [HttpPost("validate")]
+        public async Task<IActionResult> ValidateToken([FromBody] TokenValidateRequestDto request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Token))
+            {
+                return BadRequest("Token is required");
+            }
+
+            try
+            {
+                var jwtSection = HttpContext.RequestServices
+                .GetRequiredService<IConfiguration>()
+                .GetSection("Jwt");
+
+                var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtSection["Issuer"],
+
+                    ValidateAudience = true,
+                    ValidAudience = jwtSection["Audience"],
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtSection["Key"])
+                    ),
+
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                var principal = tokenHandler.ValidateToken(request.Token, validationParameters, out _);
+
+                //valid token
+                var userId = principal.Claims.First(c => c.Type == "userId").Value;
+
+                return Ok(new
+                {
+                    Valid = true,
+                    UserId = userId
+                }
+                );
+            }
+            catch
+            {
+                return Unauthorized(new { Valid = false, Message = "Invalid or expired token"});
+            }
         }
     }
 }

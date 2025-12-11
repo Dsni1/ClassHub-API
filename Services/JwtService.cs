@@ -16,9 +16,13 @@ namespace ClassHub.Services
             _config = config;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(User user, bool rememberMe)
         {
             var jwtSection = _config.GetSection("Jwt");
+
+            double expiresMinutes = rememberMe 
+                ? Convert.ToDouble(jwtSection["RememberExpiresInMinutes"]) 
+                : Convert.ToDouble(jwtSection["ExpiresInMinutes"]);
 
             var claims = new[]
             {
@@ -34,11 +38,12 @@ namespace ClassHub.Services
                 issuer: jwtSection["Issuer"],
                 audience: jwtSection["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSection["ExpiresInMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
