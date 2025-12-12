@@ -3,14 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ----------------------------------------------
 // LOAD ENV VARIABLES
 // ----------------------------------------------
-Env.Load();
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
 var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
@@ -42,11 +40,18 @@ var dbUser = Environment.GetEnvironmentVariable("DB_USER");
 var dbPass = Environment.GetEnvironmentVariable("DB_PASS");
 
 var connectionString =
-    $"server={dbHost};port={dbPort};database={dbName};uid={dbUser};password={dbPass};";
+    $"Server={dbHost};" +
+    $"Port={dbPort};" +
+    $"Database={dbName};" +
+    $"User={dbUser};" +
+    $"Password={dbPass};" +
+    $"Protocol=Tcp;" +
+    $"SslMode=None;";
+
 
 builder.Services.AddDbContext<ExternalDbContext>(options =>
 {
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    options.UseMySql(connectionString, new MariaDbServerVersion(new Version(11,0)));
 });
 
 // Add services to the container.
