@@ -6,9 +6,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ----------------------------------------------
-// LOAD ENV VARIABLES
-// ----------------------------------------------
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
 var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
