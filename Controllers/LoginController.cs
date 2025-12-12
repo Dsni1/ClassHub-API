@@ -38,6 +38,7 @@ namespace ClassHub.Controllers
             if (user == null)
                 return Unauthorized("Invalid username or password");
 
+            // Verify password
             var result = _passwordHasher.VerifyHashedPassword(
                 user,
                 user.Password,
@@ -47,19 +48,17 @@ namespace ClassHub.Controllers
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized("Invalid username or password");
 
-            // 1. Generate JWT
+            // Generate JWT
             var jwtToken = _jwtService.GenerateToken(user, request.RememberMe);
 
-            // 2. Generate Refresh Token
             var refreshToken = _jwtService.GenerateRefreshToken(
                 HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                 Request.Headers["User-Agent"].ToString()
             );
 
-            // Add userId to refresh token
             refreshToken.UserId = user.Id;
 
-            // 3. Save refresh token to DB
+            // Save refresh token to DB
             _context.RefreshTokens.Add(refreshToken);
             await _context.SaveChangesAsync();
 
